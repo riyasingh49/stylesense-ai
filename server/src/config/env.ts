@@ -1,3 +1,5 @@
+
+import "dotenv/config";
 import { z } from "zod";
 
 const envSchema = z.object({
@@ -19,21 +21,16 @@ const envSchema = z.object({
 
   GEMINI_API_KEY: z.string().optional(),
 
-  EMAIL_PROVIDER: z.enum(["mock", "resend"]).default("mock"),
+  EMAIL_PROVIDER: z.literal("mock").default("mock"),
 
   EMAIL_TEST_MODE: z
     .enum(["true", "false"])
     .default("true")
     .transform((value) => value === "true"),
 
-  RESEND_API_KEY: z.string().optional(),
-
-  EMAIL_FROM: z.string().optional(),
-
   TRACKING_TOKEN_SECRET: z
     .string()
-    .min(32, "TRACKING_TOKEN_SECRET must contain at least 32 characters")
-    .default("development-only-tracking-secret-change-me"),
+    .min(32, "TRACKING_TOKEN_SECRET must contain at least 32 characters"),
 });
 
 const result = envSchema.safeParse(process.env);
@@ -51,21 +48,9 @@ if (!result.success) {
 const env = result.data;
 
 if (env.DISCOVERY_PROVIDER === "gemini" && !env.GEMINI_API_KEY) {
-  throw new Error("GEMINI_API_KEY is required when DISCOVERY_PROVIDER=gemini.");
-}
-
-if (env.EMAIL_PROVIDER === "resend") {
-  if (!env.RESEND_API_KEY || !env.EMAIL_FROM) {
-    throw new Error(
-      "RESEND_API_KEY and EMAIL_FROM are required when EMAIL_PROVIDER=resend.",
-    );
-  }
-
-  if (env.EMAIL_TEST_MODE) {
-    throw new Error(
-      "EMAIL_TEST_MODE must be false when EMAIL_PROVIDER=resend is selected.",
-    );
-  }
+  throw new Error(
+    "GEMINI_API_KEY is required when DISCOVERY_PROVIDER=gemini.",
+  );
 }
 
 export { env };
