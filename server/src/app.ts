@@ -10,6 +10,7 @@ import { env } from "./config/env";
 import { companyRouter } from "./routes/company-routes";
 import { sendError } from "./utils/api-response";
 import { leadRouter } from "./routes/lead-routes";
+import { leadScoringRouter } from "./routes/lead-scoring-routes";
 
 const app = express();
 
@@ -43,6 +44,9 @@ app.use("/api/companies", companyRouter);
 
 // Lead endpoints
 app.use("/api/leads", leadRouter);
+
+// Lead scoring and score history endpoints
+app.use("/api/leads", leadScoringRouter);
 
 // Return a consistent response for unknown endpoints.
 app.use((_req: Request, res: Response) => {
