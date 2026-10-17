@@ -145,6 +145,7 @@ export class LangSearchClient {
             );
         }
 
+
         return pages
             .filter(
                 (page) =>
@@ -152,6 +153,7 @@ export class LangSearchClient {
                     typeof page.url === "string" &&
                     this.isHttpUrl(page.url),
             )
+            .slice(0, limit)
             .map((page) => this.mapResult(page));
     }
 

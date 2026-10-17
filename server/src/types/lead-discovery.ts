@@ -31,4 +31,5 @@ export interface DiscoveredLeadCandidate {
     linkedinUrl: string | null;
     sourceUrl: string;
     sourceEvidence: string;
+    isSynthetic?: boolean;
 }

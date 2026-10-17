@@ -1,4 +1,3 @@
-
 import "dotenv/config";
 import { z } from "zod";
 
@@ -17,12 +16,18 @@ const envSchema = z.object({
 
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
 
-  DISCOVERY_PROVIDER: z.enum(["mock", "gemini"]).default("mock"),
+  DISCOVERY_SEARCH_PROVIDER: z
+    .literal("langsearch")
+    .default("langsearch"),
+
+  LEAD_EXTRACTION_PROVIDER: z
+    .enum(["mock", "gemini"])
+    .default("gemini"),
 
   GEMINI_API_KEY: z.string().optional(),
 
   LANGSEARCH_API_KEY: z.string().optional(),
-  
+
   EMAIL_PROVIDER: z.literal("mock").default("mock"),
 
   EMAIL_TEST_MODE: z
@@ -49,9 +54,21 @@ if (!result.success) {
 
 const env = result.data;
 
-if (env.DISCOVERY_PROVIDER === "gemini" && !env.GEMINI_API_KEY) {
+if (
+  env.DISCOVERY_SEARCH_PROVIDER === "langsearch" &&
+  !env.LANGSEARCH_API_KEY
+) {
   throw new Error(
-    "GEMINI_API_KEY is required when DISCOVERY_PROVIDER=gemini.",
+    "LANGSEARCH_API_KEY is required when DISCOVERY_SEARCH_PROVIDER=langsearch.",
+  );
+}
+
+if (
+  env.LEAD_EXTRACTION_PROVIDER === "gemini" &&
+  !env.GEMINI_API_KEY
+) {
+  throw new Error(
+    "GEMINI_API_KEY is required when LEAD_EXTRACTION_PROVIDER=gemini.",
   );
 }
 
