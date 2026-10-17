@@ -21,6 +21,8 @@ const envSchema = z.object({
 
   GEMINI_API_KEY: z.string().optional(),
 
+  LANGSEARCH_API_KEY: z.string().optional(),
+  
   EMAIL_PROVIDER: z.literal("mock").default("mock"),
 
   EMAIL_TEST_MODE: z
